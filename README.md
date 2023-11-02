@@ -1,32 +1,20 @@
 # esp32_p1meter
-Software for the ESP32 (DoIT ESP DEVKIT v1/NodeMcu 32s etc.) that decodes and sends P1 smart meter (DSMR) data to a MQTT broker, with the possibility for Over The Air (OTA) firmware updates.
+Software for the ESP32 (uPesy ESP32 Wroom Devkit) that decodes and sends P1 smart meter (DSMR) data to a MQTT broker, with the possibility for Over The Air (OTA) firmware updates.
 
 ## About this fork
-This fork was based on a ESP8266 and I only had a ESP32 laying around so I'm trying to make this work on my ESP32 DoIT board.
+This fork is based on work from [bartwo](https://github.com/bartwo/esp32_p1meter).
 
-The original project of [fliphess](https://github.com/fliphess/esp8266_p1meter) has issues with DSMR 5.0 meters, which send telegrams every 1 second at a high 115200 baud rate. 
-This causes the used SoftwareSerial to struggle to keep up and thus only receives corrupted messages. 
-
-The project of [daniel-jong](https://github.com/daniel-jong/esp8266_p1meter) switches to using the main hardware serial port (RX) for communication with the p1 meter and is tested on the `Landys and Gyr E360` smartmeter (DSMR 5.0).
-
-Then I noticed the project of [WhoSayIn](https://github.com/WhoSayIn/esp8266_dsmr2mqtt), that takes a much more minimalistic approach, which I liked. However, I discovered this project was also designed for the DSMR 4.0 meters.
-
-With this fork, I want to accomplish the following:
-- Combine the projects mentioned above in a minimalistic setup for the newer DSMR 5.0 smart meters.
-- Separate code in multiple files for readability.
-- Add solar panel meter: read out delivered energy.
-- Easy to read and add new readouts from a telegram. Used a struct to accomplish this.
-- Generate the full MQTT topics based on the array of telegram decode structs.
-- Easy to debug the software and able to compile without the debug for a more compact compiled code base. 
-
-I noticed that the other repositories use SoftwareSerial library to readout the P1 port but the ESP32 has multiple RX and TX port to read en write serial streams. This made it easy to debug the code and have the full speed of the hardware serial. Also the ESP32 is a bit faster so it doesn't crash as fast as a ESP8266 when you want to readout every second.
+How is this form different from base:
+- Make MQTT sensors configured using JSON map with all available data and get MQTT sensors created dynamically.
+- Add email sending for debugging purposes.
+- Even more refactored code for readability. 
 
 ## Setup
 This setup requires:
 - An ESP32 (DoIT DEVKIT v1 has been tested)
-- Small breadboard
 - A 10k ohm resistor
-- A 4 pin (RJ11) or [6 pin (RJ12) cable](https://www.tinytronics.nl/shop/nl/kabels/adapters/rj12-naar-6-pins-dupont-jumper-adapter). Both cables work great, but a 6 pin cable can also power the ESP8266 on most DSMR5+ meters.
+- A simple LED for debugging
+- A 6 pin RJ12 cable created from UTP cable and soldered directly to the kit. 4 pin version should work too but in Lithuania it's practically impossible to have external power for the device.
 
 Setting up your Arduino IDE:
 - Ensure you have selected the right board (you might need to install your esp32board in the Arduino IDE).
@@ -91,7 +79,8 @@ sensors/power/p1meter/short_power_drops
 sensors/power/p1meter/short_power_peaks
 ```
 
-But all the metrics you need are easily added using the `setupDataReadout()` method. With the DEBUG mode it is easy to see all the topics you add/create by the serial monitor. To see what your telegram is outputting in the Netherlands see: https://www.netbeheernederland.nl/_upload/Files/Slimme_meter_15_a727fce1f1.pdf for the dutch codes pag. 19 -23
+But all the metrics you need are easily added in JSON map `dsmr_map.h` file. With the DEBUG mode it is easy to see all the topics you add/create by the serial monitor.
+To see what your telegram is outputting in the Netherlands see: https://www.netbeheernederland.nl/_upload/Files/Slimme_meter_15_a727fce1f1.pdf for the dutch codes pag. 19 -23
 
 ### Home Assistant Configuration
 
