@@ -5,31 +5,20 @@
     and converts to telegramDecodedObjects MQTT vector.
 */
 void setupDataReadout() {
-  //There is no point of usin Description - let's filter it out
-  StaticJsonDocument<48> _filterDoc;
-  JsonObject _filterObj = _filterDoc.createNestedObject();
-  _filterObj["OBIS"] = true;
-  _filterObj["Name"] = true;
-
-  DynamicJsonDocument _dsmrMapDocument(13000);
-  DeserializationError _error = deserializeJson(_dsmrMapDocument, DsmrMap, DeserializationOption::Filter(_filterDoc));
+  DynamicJsonDocument _dsmrMapDocument(DYNAMIC_JSON_DOCUMENT_SIZE);
+  DeserializationError _error = deserializeJson(_dsmrMapDocument, DSMR_MAP);
   if (_error) {
     Serial.print("deserializeJson() failed: ");
     Serial.println(_error.c_str());
     return;
   }
 
-  // Convert JSON document to JSON array
-  JsonArray _jsonArray = _dsmrMapDocument.as<JsonArray>();
-
   // Create TelegramObject vector which will be used to send MQTT messages
-  const uint _count = _jsonArray.size();
+  const uint _count = _dsmrMapDocument.as<JsonArray>().size();
   for (int i = 0; i < _count; i++) {
-    JsonObject _item = _jsonArray[i];
-
     TelegramDecodedObject _tdo;
-    strcpy(_tdo.code, _item["OBIS"]);
-    _tdo.name = _item["Name"].as<String>();
+    strcpy(_tdo.code, _dsmrMapDocument.as<JsonArray>()[i]["OBIS"]);
+    _tdo.name = _dsmrMapDocument.as<JsonArray>()[i]["Name"].as<String>();
 
     telegramObjects.push_back(_tdo);
   }

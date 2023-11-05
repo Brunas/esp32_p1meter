@@ -1,3 +1,5 @@
+#ifdef TEST
+String testTelegram = R""""(
 /ESO5\253880853_A
 0-0:1.0.0(231030174109W)
 1-0:1.8.0(00002168.313*kWh)
@@ -94,3 +96,37 @@
 1-1:0.2.0(01.97)
 1-1:0.2.8(68860C25)
 !C471
+)"""";
+
+bool readTestSerial() {
+  int _index = 1;
+  while (true) {
+      String _line = getTestLine(testTelegram, '\n', _index);
+      if (_line.isEmpty()) {
+         return true;
+      }
+      int _len = _line.length();
+      strcpy(telegram, _line.c_str());
+      telegram[_len] = '\n';
+      telegram[_len + 1] = 0;
+
+      bool result = decodeTelegram(_len + 2);
+      _index++;   
+  }
+}
+
+String getTestLine(String data, char separator, int index) {
+  int _found = 0;
+  int _strIndex[] = {
+    0, -1  };
+  int _maxIndex = data.length()-1;
+  for(int i=0; i<=_maxIndex && _found<=index; i++){
+    if(data.charAt(i) == separator || i == _maxIndex) {
+      _found++;
+      _strIndex[0] = _strIndex[1]+1;
+      _strIndex[1] = (i == _maxIndex) ? i+1 : i;
+    }
+  }
+  return _found > index ? data.substring(_strIndex[0], _strIndex[1]) : "";
+}
+#endif

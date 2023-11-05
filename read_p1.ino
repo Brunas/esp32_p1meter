@@ -44,13 +44,10 @@ String getValue(char *buffer, int maxlen, char startchar, char endchar) {
   memset(res, 0, sizeof(res));
 
   if (strncpy(res, buffer + s + 1, l)) {
-    if (endchar == '*') {
-      if (isNumber(res, l))
-        return String(1000 * atof(res));
-    } else if (endchar == ')') {
-      if (isNumber(res, l))
-        return String(atof(res));
-    }
+    if (isNumber(res, l))
+      return String((endchar == VALUE_END_CHAR ? VALUE_NUMERIC_MULTIPLIER : 1) * atof(res));
+    else
+      return String(res);
   }
 
   return "";
@@ -68,7 +65,7 @@ bool decodeTelegram(int len) {
   for (int cnt = 0; cnt < len; cnt++) {
     Serial.print(telegram[cnt]);
   }
-  Serial.print("\n");
+  Serial.println("");
 #endif
 
   if (startChar >= 0) {
@@ -107,11 +104,10 @@ bool decodeTelegram(int len) {
         telegramObjects[i].value = newValue;
         telegramObjects[i].sendData = true;
       }
-      break;
-
 #ifdef DEBUG
       Serial.println((String) "Found a Telegram object: " + telegramObjects[i].name + " value: " + telegramObjects[i].value);
 #endif
+      break;
     }
   }
 
@@ -126,7 +122,7 @@ bool readP1Serial() {
 #endif
     memset(telegram, 0, sizeof(telegram));
     while (Serial2.available()) {
-      // Reads the telegram untill it finds a return character
+      // Reads the telegram until it finds a return character
       // That is after each line in the telegram
       int len = Serial2.readBytesUntil('\n', telegram, P1_MAXLINELENGTH);
 
@@ -143,3 +139,5 @@ bool readP1Serial() {
   }
   return false;
 }
+
+

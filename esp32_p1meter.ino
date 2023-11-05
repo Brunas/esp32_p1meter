@@ -2,41 +2,44 @@
 #include <PubSubClient.h>
 #include <WiFi.h>
 #include <ESPmDNS.h>
-#include <EMailSender.h>
 #include <ArduinoJson.h>
+#include <tiny-collections.h>
+#ifdef EMAIL_DEBUGGING
+#include <EMailSender.h>
+#endif
 
 #include "settings.h"
 #include "dsmr_map.h"
 
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
-
+#ifdef EMAIL_DEBUGGING
 EMailSender emailSend(EMAIL_ADDRESS, EMAIL_PASSWORD);
+#endif
 
 /***********************************
             Main Setup
  ***********************************/
 void setup() {
-  Serial.begin(BAUD_RATE);
- 
-  // Initialize pins
+  // Initialize pins and blink once for setup start
   pinMode(LED_PIN, OUTPUT);
   digitalWrite(LED_PIN, LOW);
+  blinkLed(1, 500);
+
+  Serial.begin(BAUD_RATE);
 
 #ifdef DEBUG
-  // Blinking 2 times fast and 2 slower to indicate DEBUG mode
-  Serial.println("Booting - DEBUG mode on");
-  blinkLed(2, 500);
+  // Blinking 2 times long to indicate DEBUG mode
+  debug("Booting - DEBUG mode on");
   blinkLed(2, 2000);
 #endif
 
   WiFi.mode(WIFI_STA);
   WiFi.begin(WIFI_SSID, WIFI_PASS);
-  makeSureWiFiConnected();
+  makeSureWiFiConnected(true);
 
   MDNS.begin(String(HOSTNAME).c_str());
   delay(1000);
-  Serial.println("mDNS responder started");
 
   setupDataReadout();
   setupOTA();
@@ -44,19 +47,12 @@ void setup() {
   mqttClient.setServer(MQTT_HOST, atoi(MQTT_PORT));
   makeSureMqttConnected();
 
+#ifndef TEST
   Serial2.begin(BAUD_RATE, SERIAL_8N1, RXD2, TXD2, true);
-  delay(1000);
-  if (!Serial2.available()) {
-    Serial2.end();
-  }
-
-  sendEmailMessage(String(HOSTNAME) + " message", "System initialised successfully!");
-
-#ifdef DEBUG
-  Serial.println("Ready");//
-  Serial.print("IP address: ");
-  Serial.println(WiFi.localIP());
 #endif
+
+  debug("System initialised successfully!");
+
   blinkLed(5, 500);  // Blink 5 times to indicate end of setup
 }
 
@@ -66,7 +62,7 @@ void setup() {
 void loop() {
   long now = millis();
 
-  makeSureWiFiConnected();
+  makeSureWiFiConnected(false);
 
   ArduinoOTA.handle();
 
@@ -82,7 +78,11 @@ void loop() {
   }
 
   if (now - LAST_UPDATE_SENT > UPDATE_INTERVAL) {
+#ifdef TEST
+    if (readTestSerial()) {
+#else
     if (readP1Serial()) {
+#endif
       LAST_UPDATE_SENT = millis();
       sendDataToBroker();
     }
@@ -96,7 +96,6 @@ void loop() {
    Over the Air update setup
 */
 void setupOTA() {
-  ArduinoOTA.setHostname(String(HOSTNAME).c_str());
   ArduinoOTA.onStart([]() {
               String type;
               if (ArduinoOTA.getCommand() == U_FLASH)
@@ -126,6 +125,7 @@ void setupOTA() {
       else if (error == OTA_END_ERROR)
         Serial.println("End Failed");
     });
-
+  ArduinoOTA.setHostname(String(HOSTNAME).c_str());
+  ArduinoOTA.setPasswordHash(String(OTA_PASSWORD_HASH).c_str());
   ArduinoOTA.begin();
 }

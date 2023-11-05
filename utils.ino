@@ -1,16 +1,19 @@
 void blinkLed(int numberOfBlinks, int msBetweenBlinks) {
+  int msDurationForLow=200;
   for (int i = 0; i < numberOfBlinks; i++) {
+    if (i > 0) { 
+      delay(msDurationForLow);
+    }
     digitalWrite(LED_PIN, HIGH);
     delay(msBetweenBlinks);
     digitalWrite(LED_PIN, LOW);
-    if (i != numberOfBlinks - 1) {
-      delay(msBetweenBlinks);
-    }
   }
 }
 
-void makeSureWiFiConnected() {
-  delay(3000);
+void makeSureWiFiConnected(bool setupMode) {
+  if (setupMode) {
+    delay(3000);
+  }
   if (WiFi.status() != WL_CONNECTED) {
     blinkLed(20, 50);  // Blink fast to indicate failed WiFi connection
     WiFi.begin(WIFI_SSID, WIFI_PASS);
@@ -25,16 +28,20 @@ void makeSureWiFiConnected() {
       delay(3000);
     }
     if (WiFi.status() != WL_CONNECTED) {
-      blinkLed(20, 50);  // Blink fast to indicate failed WiFi connection
+      blinkLed(10, 50);  // Blink fast to indicate failed WiFi connection
 #ifdef DEBUG
       Serial.println("Connection Failed! Rebooting...");
 #endif
       ESP.restart();
     }
   }
+  if (setupMode) {
+    debug ("WiFi Ready. IP: " + WiFi.localIP().toString() + ", RSSI: " + String(WiFi.RSSI()));
+  }
 }
 
 void sendEmailMessage(String subject, String message) {
+#ifdef EMAIL_DEBUGGING
   EMailSender::EMailMessage _eMailMessage;
   _eMailMessage.subject = subject;
   _eMailMessage.message = message;
@@ -46,4 +53,19 @@ void sendEmailMessage(String subject, String message) {
     Serial.println(_resp.code);
     Serial.println(_resp.desc);
   }
+#endif
+  ;
+}
+
+void debug(String msg) {
+#ifdef DEBUG
+  emailMessageDump += msg + "\r\n";
+  Serial.println(msg);
+
+  if (emailMessageDump.length() > 5000) {
+    sendEmailMessage(String(HOSTNAME) + " message", emailMessageDump);
+    emailMessageDump = "";
+  }
+#endif
+  ;
 }
