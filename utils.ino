@@ -12,8 +12,11 @@ void blinkLed(int numberOfBlinks, int msBetweenBlinks) {
 
 void makeSureWiFiConnected(bool setupMode) {
   if (setupMode) {
+    WiFi.mode(WIFI_STA);
+    WiFi.begin(WIFI_SSID, WIFI_PASS);
     delay(3000);
   }
+  
   if (WiFi.status() != WL_CONNECTED) {
     blinkLed(20, 50);  // Blink fast to indicate failed WiFi connection
     WiFi.begin(WIFI_SSID, WIFI_PASS);
