@@ -34,8 +34,6 @@ void setup() {
   blinkLed(2, 2000);
 #endif
 
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(WIFI_SSID, WIFI_PASS);
   makeSureWiFiConnected(true);
 
   MDNS.begin(String(HOSTNAME).c_str());
