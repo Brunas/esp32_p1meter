@@ -7,7 +7,8 @@ This fork is based on work from [bartwo](https://github.com/bartwo/esp32_p1meter
 How is this form different from base:
 - Make MQTT sensors configured using JSON map with all available data and get MQTT sensors created dynamically.
 - Add email sending for debugging purposes.
-- Even more refactored code for readability. 
+- Added support for string readings not just numbers.
+- Even more refactored code for readability.
 
 ## Setup
 This setup requires:
