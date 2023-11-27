@@ -4,7 +4,7 @@ Software for the ESP32 (uPesy ESP32 Wroom Devkit) that decodes and sends P1 smar
 ## About this fork
 This fork is based on work from [bartwo](https://github.com/bartwo/esp32_p1meter).
 
-How is this form different from base:
+How is this fork different from base:
 - Make MQTT sensors configured using JSON map with all available data and get MQTT sensors created dynamically.
 - Add email sending for debugging purposes.
 - Added support for string readings not just numbers.
@@ -12,7 +12,8 @@ How is this form different from base:
 
 ## Setup
 This setup requires:
-- An ESP32 (I have used [ESP32-WROOM-32U](https://www.aliexpress.com/item/32864722159.html?spm=a2g0o.order_detail.order_detail_item.9.221ff19cMYLPDE) because of external antenna - my meter is in metal case ~15m outside from the access point)
+- An ESP32 (I have used [ESP32-WROOM-32U](https://www.aliexpress.com/item/32864722159.html) because of external antenna - my meter is in metal case ~15m outside from the access point with thick wall)
+- IPEX-SMA cable of appropriate length to have antenna outside and put it through some hole in the meter metal case. For me 50cm length is more than enough. 
 - A 10k ohm resistor.
 - A simple LED for debugging and appropriate resistor for it for more information read [here](https://kitronik.co.uk/blogs/resources/which-resistor-should-i-use-with-my-led).
 - A 6 pin RJ12 cable created from UTP cable and soldered directly to the kit. 4 pin version should work too but in Lithuania it's hard to have external power for the device in the meter box.
@@ -25,8 +26,8 @@ Setting up your Arduino IDE:
 - Write to your device via USB the first time, you can do it OTA all times thereafter.
 
 ### Circuit diagram
-I have used the RX02 pin on the ESP32 so u can still use the USB port for debugging you ESP32.
-Connect the ESP32 to an RJ11 cable/connector following the diagram.
+I have used the RX02 pin on the ESP32 to still use the USB port on devkit for debugging your ESP32. You could use any other pin however if you use standard RX and try debugging using USB, conflicts will happen. 
+Connect the ESP32 to an RJ12 cable/connector following the diagram.
 
 | P1 pin   | ESP32 Pin |
 | ----     | ---- |
@@ -57,30 +58,15 @@ If you have how to power ESP32, a 4 pin cable is OK.
 
 All metrics are send to their own MQTT topic.
 The software generates all the topic through the Serial monitor when starting up
-Example topics are:
+Example:
 
 ```
-sensors/power/p1meter/consumption_low_tarif
-sensors/power/p1meter/consumption_high_tarif
-sensors/power/p1meter/actual_received
-sensors/power/p1meter/instant_power_usage_l1
-sensors/power/p1meter/instant_power_usage_l2
-sensors/power/p1meter/instant_power_usage_l3
-sensors/power/p1meter/instant_power_current_l1
-sensors/power/p1meter/instant_power_current_l2
-sensors/power/p1meter/instant_power_current_l3
-sensors/power/p1meter/instant_voltage_l1
-sensors/power/p1meter/instant_voltage_l2
-sensors/power/p1meter/instant_voltage_l3
-sensors/power/p1meter/actual_tarif_group
-sensors/power/p1meter/short_power_outages
-sensors/power/p1meter/long_power_outages
-sensors/power/p1meter/short_power_drops
-sensors/power/p1meter/short_power_peaks
+p1_meter/sensor/active_energy_import
 ```
 
-But all the metrics you need are easily added in JSON map `dsmr_map.h` file. With the DEBUG mode it is easy to see all the topics you add/create by the serial monitor.
-
+All the metrics you need are easily added in `DMSR_MAP` variable in `dsmr_map.h` file. With the DEBUG mode it is easy to see all the topics you add/create by the serial monitor. Also, it's possible to configure topic structure by changing `MQTT_ROOT_TOPIC` value in settings.h` file.
+There is additional TEST mode to try your setup while your adapter is not connected to P1 port. 
+EMAIL_DEBUGGING is used to send debug messages to any email, e.g. gmail address. This is maybe usefull to see what's going on when device is connected to P1 port and actuall debugging using USB port is impossible.
 ### Home Assistant Configuration
 
 Use this [example](https://raw.githubusercontent.com/daniel-jong/esp8266_p1meter/master/assets/p1_sensors.yaml) for home assistant's `sensor.yaml`

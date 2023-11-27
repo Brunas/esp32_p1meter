@@ -10,7 +10,7 @@ void makeSureMqttConnected() {
       char *message = new char[16 + strlen(HOSTNAME) + 1];
       strcpy(message, "p1 meter alive: ");
       strcat(message, HOSTNAME);
-      mqttClient.publish("hass/status", message);
+      mqttClient.publish(String(MQTT_STATUS_TOPIC).c_str(), message);
     }
     else {
       debug("MQTT Connection Failed! Retries left: " + String(_retries));

@@ -7,7 +7,7 @@
 
 // Update treshold in milliseconds, messages will only be sent on this interval
 //#define UPDATE_INTERVAL 1000 // 1 second
-#define UPDATE_INTERVAL 10000 // 10 seconds
+#define UPDATE_INTERVAL 30000 // 30 seconds
 //#define UPDATE_INTERVAL 60000  // 1 minute
 //#define UPDATE_INTERVAL 300000 // 5 minutes
 
@@ -37,21 +37,22 @@
 #define DYNAMIC_JSON_DOCUMENT_SIZE 12288
 
 #define MQTT_MAX_RECONNECT_TRIES 10
-#define MQTT_ROOT_TOPIC "sensor/p1_meter"
+#define MQTT_ROOT_TOPIC "p1_meter/sensor"
+#define MQTT_STATUS_TOPIC "p1_meter/status"
 
 #define WIFI_MAX_RECONNECT_TRIES 5
 
-char WIFI_SSID[32] = "MyWifi";
-char WIFI_PASS[32] = "MyWifiPass";
+char WIFI_SSID[32] = "BruAr2";
+char WIFI_PASS[32] = "neprisimenuVisai-k0ks";
 
 char MQTT_HOST[64] = "homeassistant.local";
 char MQTT_PORT[6] = "1883";
-char MQTT_USER[32] = "user";
-char MQTT_PASS[32] = "pass";
+char MQTT_USER[32] = "brUodas";
+char MQTT_PASS[32] = "bruodas";
 
 #ifdef EMAIL_DEBUGGING
-char EMAIL_ADDRESS[32] = "me@gmail.com";
-char EMAIL_PASSWORD[32] = "MyGmailAppPass";
+char EMAIL_ADDRESS[32] = "brunonas@gmail.com";
+char EMAIL_PASSWORD[32] = "ixtzwdwwphpcxsnk";
 String emailMessageDump;
 #endif
 

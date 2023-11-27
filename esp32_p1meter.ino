@@ -4,16 +4,15 @@
 #include <ESPmDNS.h>
 #include <ArduinoJson.h>
 #include <tiny-collections.h>
-#ifdef EMAIL_DEBUGGING
-#include <EMailSender.h>
-#endif
 
 #include "settings.h"
 #include "dsmr_map.h"
 
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
+
 #ifdef EMAIL_DEBUGGING
+#include <EMailSender.h>
 EMailSender emailSend(EMAIL_ADDRESS, EMAIL_PASSWORD);
 #endif
 

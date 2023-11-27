@@ -62,13 +62,16 @@ void sendEmailMessage(String subject, String message) {
 
 void debug(String msg) {
 #ifdef DEBUG
-  emailMessageDump += msg + "\r\n";
   Serial.println(msg);
 
-  if (emailMessageDump.length() > 5000) {
-    sendEmailMessage(String(HOSTNAME) + " message", emailMessageDump);
-    emailMessageDump = "";
-  }
+  #ifdef EMAIL_DEBUGGING
+    emailMessageDump += msg + "\r\n";
+
+    if (emailMessageDump.length() > 5000) {
+      sendEmailMessage(String(HOSTNAME) + " message", emailMessageDump);
+      emailMessageDump = "";
+    }
+  #endif
 #endif
   ;
 }
