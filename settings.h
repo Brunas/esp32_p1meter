@@ -20,7 +20,7 @@
 #define NA "N/A"
 
 #define HOSTNAME "p1_meter"
-#define OTA_PASSWORD_HASH "21232f297a57a5a743894a0e4a801fc3"
+#define OTA_PASSWORD_HASH "MD5 hash of your password"
 
 #define BAUD_RATE 115200
 #define RXD2 16
@@ -42,17 +42,17 @@
 
 #define WIFI_MAX_RECONNECT_TRIES 5
 
-char WIFI_SSID[32] = "BruAr2";
-char WIFI_PASS[32] = "neprisimenuVisai-k0ks";
+char WIFI_SSID[32] = "MyWiFi2";
+char WIFI_PASS[32] = "MyPassword";
 
 char MQTT_HOST[64] = "homeassistant.local";
 char MQTT_PORT[6] = "1883";
-char MQTT_USER[32] = "brUodas";
-char MQTT_PASS[32] = "bruodas";
+char MQTT_USER[32] = "mqtt";
+char MQTT_PASS[32] = "mqttpass";
 
 #ifdef EMAIL_DEBUGGING
-char EMAIL_ADDRESS[32] = "brunonas@gmail.com";
-char EMAIL_PASSWORD[32] = "ixtzwdwwphpcxsnk";
+char EMAIL_ADDRESS[32] = "my@gmail.com";
+char EMAIL_PASSWORD[32] = "mygmailappkey";
 String emailMessageDump;
 #endif
 
