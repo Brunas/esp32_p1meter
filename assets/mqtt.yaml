@@ -1,0 +1,229 @@
+# Sensors for esp32_p1meter to be used in Home Assistant
+# In configuration.yaml file add following line to make sensors appear in HA:
+# mqtt: !include mqtt.yaml
+sensor:
+  - name: P1 Meter Clock Raw
+    unique_id: p1_meter_clock_raw
+    state_topic: "p1_meter/sensor/clock"
+    icon: "mdi:clock"
+  - name: P1 Meter Clock Timestamp
+    unique_id: p1_meter_clock_timestamp
+    state_topic: "p1_meter/sensor/clock"
+    value_template: >
+      {{strptime(value | regex_findall_index("\d*"), '%y%m%d%H%M%S') | as_timestamp}}
+  - name: P1 Meter Clock Date and Time
+    unique_id: p1_meter_clock_datetime
+    state_topic: "p1_meter/sensor/clock"
+    value_template: >
+      {{strptime(value | regex_findall_index("\d*"), '%y%m%d%H%M%S')}}
+
+  - name: P1 Meter Active energy import (+A) rate 1
+    unique_id: p1_meter_active_energy_import_rate_1
+    state_topic: "p1_meter/sensor/active_energy_import_rate_1"
+    device_class: "energy"
+    state_class: "total_increasing"
+    unit_of_measurement: "kWh"
+    suggested_display_precision: 3
+  - name: P1 Meter Active energy import (+A) rate 2
+    unique_id: p1_meter_active_energy_import_rate_2
+    state_topic: "p1_meter/sensor/active_energy_import_rate_2"
+    device_class: "energy"
+    state_class: "total_increasing"
+    unit_of_measurement: "kWh"
+    suggested_display_precision: 3
+
+  - name: P1 Meter Active energy export (+A) rate 1
+    unique_id: p1_meter_active_energy_export_rate_1
+    state_topic: "p1_meter/sensor/active_energy_export_rate_1"
+    device_class: "energy"
+    state_class: "total_increasing"
+    unit_of_measurement: "kWh"
+    suggested_display_precision: 3
+  - name: P1 Meter Active energy export (+A) rate 2
+    unique_id: p1_meter_active_energy_export_rate_2
+    state_topic: "p1_meter/sensor/active_energy_export_rate_2"
+    device_class: "energy"
+    state_class: "total_increasing"
+    unit_of_measurement: "kWh"
+    suggested_display_precision: 3
+
+  - name: P1 Meter Instantaneous voltage L1
+    unique_id: p1_meter_instantaneous_voltage_l1
+    state_topic: "p1_meter/sensor/instantaneous_voltage_l1"
+    device_class: "voltage"
+    state_class: "measurement"
+    unit_of_measurement: "kV"
+  - name: P1 Meter Instantaneous current L1
+    unique_id: p1_meter_instantaneous_current_l1
+    state_topic: "p1_meter/sensor/instantaneous_current_l1"
+    device_class: "current"
+    state_class: "measurement"
+    unit_of_measurement: "kA"
+  - name: P1 Meter Instantaneous voltage L2
+    unique_id: p1_meter_instantaneous_voltage_l2
+    state_topic: "p1_meter/sensor/instantaneous_voltage_l2"
+    device_class: "voltage"
+    state_class: "measurement"
+    unit_of_measurement: "kV"
+  - name: P1 Meter Instantaneous current L2
+    unique_id: p1_meter_instantaneous_current_l2
+    state_topic: "p1_meter/sensor/instantaneous_current_l2"
+    device_class: "current"
+    state_class: "measurement"
+    unit_of_measurement: "kA"
+  - name: P1 Meter Instantaneous voltage L3
+    unique_id: p1_meter_instantaneous_voltage_l3
+    state_topic: "p1_meter/sensor/instantaneous_voltage_l3"
+    device_class: "voltage"
+    state_class: "measurement"
+    unit_of_measurement: "kV"
+  - name: P1 Meter Instantaneous current L3
+    unique_id: p1_meter_instantaneous_current_l3
+    state_topic: "p1_meter/sensor/instantaneous_current_l3"
+    device_class: "current"
+    state_class: "measurement"
+    unit_of_measurement: "kA"
+
+  - name: P1 Meter Instantaneous active power (|+A|+|-A|)
+    unique_id: p1_meter_instantaneous_active_power
+    state_topic: "p1_meter/sensor/instantaneous_active_power"
+    device_class: "power"
+    state_class: "measurement"
+    unit_of_measurement: "kW"
+
+  - name: P1 Meter Instantaneous active import power (+A) in phase L1
+    unique_id: p1_meter_instantaneous_active_import_power_in_phase_l1
+    state_topic: "p1_meter/sensor/instantaneous_active_import_power_in_phase_l1"
+    device_class: "power"
+    state_class: "measurement"
+    unit_of_measurement: "kW"
+  - name: P1 Meter Instantaneous active import power (+A) in phase L2
+    unique_id: p1_meter_instantaneous_active_import_power_in_phase_l2
+    state_topic: "p1_meter/sensor/instantaneous_active_import_power_in_phase_l2"
+    device_class: "power"
+    state_class: "measurement"
+    unit_of_measurement: "kW"
+  - name: P1 Meter Instantaneous active import power (+A) in phase L3
+    unique_id: p1_meter_instantaneous_active_import_power_in_phase_l3
+    state_topic: "p1_meter/sensor/instantaneous_active_import_power_in_phase_l3"
+    device_class: "power"
+    state_class: "measurement"
+    unit_of_measurement: "kW"
+
+  - name: P1 Meter Instantaneous active export power (-A) in phase L1
+    unique_id: p1_meter_instantaneous_active_export_power_in_phase_l1
+    state_topic: "p1_meter/sensor/instantaneous_active_export_power_in_phase_l1"
+    device_class: "power"
+    state_class: "measurement"
+    unit_of_measurement: "kW"
+  - name: P1 Meter Instantaneous active export power (-A) in phase L2
+    unique_id: p1_meter_instantaneous_active_export_power_in_phase_l2
+    state_topic: "p1_meter/sensor/instantaneous_active_export_power_in_phase_l2"
+    device_class: "power"
+    state_class: "measurement"
+    unit_of_measurement: "kW"
+  - name: P1 Meter Instantaneous active export power (-A) in phase L3
+    unique_id: p1_meter_instantaneous_active_export_power_in_phase_l3
+    state_topic: "p1_meter/sensor/instantaneous_active_export_power_in_phase_l3"
+    device_class: "power"
+    state_class: "measurement"
+    unit_of_measurement: "kW"
+
+  - name: P1 Meter Instantaneous apparent import power (+VA)
+    unique_id: p1_meter_instantaneous_apparent_import_power
+    state_topic: "p1_meter/sensor/instantaneous_apparent_import_power"
+    device_class: "apparent_power"
+    state_class: "measurement"
+    unit_of_measurement: "kVA"
+  - name: P1 Meter Instantaneous apparent import power (+VA) in phase L1
+    unique_id: p1_meter_instantaneous_apparent_import_power_in_phase_l1
+    state_topic: "p1_meter/sensor/instantaneous_apparent_import_power_in_phase_l1"
+    device_class: "apparent_power"
+    state_class: "measurement"
+    unit_of_measurement: "kVA"
+  - name: P1 Meter Instantaneous apparent import power (+VA) in phase L2
+    unique_id: p1_meter_instantaneous_apparent_import_power_in_phase_l2
+    state_topic: "p1_meter/sensor/instantaneous_apparent_import_power_in_phase_l2"
+    device_class: "apparent_power"
+    state_class: "measurement"
+    unit_of_measurement: "kVA"
+  - name: P1 Meter Instantaneous apparent import power (+VA) in phase L3
+    unique_id: p1_meter_instantaneous_apparent_import_power_in_phase_l3
+    state_topic: "p1_meter/sensor/instantaneous_apparent_import_power_in_phase_l3"
+    device_class: "apparent_power"
+    state_class: "measurement"
+    unit_of_measurement: "kVA"
+
+  - name: P1 Meter Instantaneous apparent export power (-VA)
+    unique_id: p1_meter_instantaneous_apparent_export_power
+    state_topic: "p1_meter/sensor/instantaneous_apparent_export_power"
+    device_class: "apparent_power"
+    state_class: "measurement"
+    unit_of_measurement: "kVA"
+  - name: P1 Meter Instantaneous apparent export power (-VA) in phase L1
+    unique_id: p1_meter_instantaneous_apparent_export_power_in_phase_l1
+    state_topic: "p1_meter/sensor/instantaneous_apparent_export_power_in_phase_l1"
+    device_class: "apparent_power"
+    state_class: "measurement"
+    unit_of_measurement: "kVA"
+  - name: P1 Meter Instantaneous apparent export power (-VA) in phase L2
+    unique_id: p1_meter_instantaneous_apparent_export_power_in_phase_l2
+    state_topic: "p1_meter/sensor/instantaneous_apparent_export_power_in_phase_l2"
+    device_class: "apparent_power"
+    state_class: "measurement"
+    unit_of_measurement: "kVA"
+  - name: P1 Meter Instantaneous apparent export power (-VA) in phase L3
+    unique_id: p1_meter_instantaneous_apparent_export_power_in_phase_l3
+    state_topic: "p1_meter/sensor/instantaneous_apparent_export_power_in_phase_l3"
+    device_class: "apparent_power"
+    state_class: "measurement"
+    unit_of_measurement: "kVA"
+
+  - name: P1 Meter Instantaneous Power factor (+A/+VA)
+    unique_id: p1_meter_instantaneous_power_factor
+    state_topic: "p1_meter/sensor/instantaneous_power_factor"
+    device_class: "power_factor"
+    state_class: "measurement"
+  - name: P1 Meter Instantaneous power factor in phase L1
+    unique_id: p1_meter_instantaneous_power_factor_in_phase_l1
+    state_topic: "p1_meter/sensor/instantaneous_power_factor_in_phase_l1"
+    device_class: "power_factor"
+    state_class: "measurement"
+  - name: P1 Meter Instantaneous power factor in phase L2
+    unique_id: p1_meter_instantaneous_power_factor_in_phase_l2
+    state_topic: "p1_meter/sensor/instantaneous_power_factor_in_phase_l2"
+    device_class: "power_factor"
+    state_class: "measurement"
+  - name: P1 Meter Instantaneous power factor in phase L3
+    unique_id: p1_meter_instantaneous_power_factor_in_phase_l3
+    state_topic: "p1_meter/sensor/instantaneous_power_factor_in_phase_l3"
+    device_class: "power_factor"
+    state_class: "measurement"
+  - name: P1 Meter Minimum Power factor (+A/+VA)
+    unique_id: p1_meter_minimum_power_factor
+    state_topic: "p1_meter/sensor/minimum_power_factor"
+    device_class: "power_factor"
+    state_class: "measurement"
+
+  - name: P1 Meter Number of power failures in any phase
+    unique_id: p1_meter_number_of_power_failures_in_any_phase
+    state_topic: "p1_meter/sensor/number_of_power_failures_in_any_phase"
+    state_class: "total_increasing"
+  - name: P1 Meter Duration of last voltage sag in phase L1
+    unique_id: p1_meter_duration_of_last_voltage_sag_in_phase_l1
+    state_topic: "p1_meter/sensor/duration_of_last_voltage_sag_in_phase_l1"
+    device_class: "duration"
+    state_class: "measurement"
+    unit_of_measurement: "s"
+  - name: P1 Meter Duration of last voltage sag in phase L2
+    unique_id: p1_meter_duration_of_last_voltage_sag_in_phase_l2
+    state_topic: "p1_meter/sensor/duration_of_last_voltage_sag_in_phase_l2"
+    device_class: "duration"
+    state_class: "measurement"
+    unit_of_measurement: "s"
+  - name: P1 Meter Duration of last voltage sag in phase L3
+    unique_id: p1_meter_duration_of_last_voltage_sag_in_phase_l3
+    state_topic: "p1_meter/sensor/duration_of_last_voltage_sag_in_phase_l3"
+    device_class: "duration"
+    state_class: "measurement"
+    unit_of_measurement: "s"

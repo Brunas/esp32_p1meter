@@ -59,6 +59,10 @@ String emailMessageDump;
 // if your P1 values with units need to be multiplied by any multiplier, specify it here
 long VALUE_NUMERIC_MULTIPLIER = 1;
 
+// Decimal places for float values, by default it's 2
+// Integers are handled automatically and no decimals are used
+unsigned short VALUE_FLOAT_DECIMAL_PLACES = 3;
+
 // Nothing to change below - globals to make it all work as simple as possible
 char telegram[P1_MAXLINELENGTH];
 

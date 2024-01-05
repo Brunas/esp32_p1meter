@@ -14,13 +14,20 @@ unsigned int crc16(unsigned int crc, unsigned char *buf, int len) {
   return crc;
 }
 
-bool isNumber(char *res, int len) {
+short getValueType(char *res, int len) {
+  short dotsFound = 0;
   for (int i = 0; i < len; i++) {
     if (((res[i] < '0') || (res[i] > '9')) && (res[i] != '.' && res[i] != 0)) {
-      return false;
+      return -1; // non-numeric
+    }
+    if (res[i] == '.') {
+      dotsFound++;
     }
   }
-  return true;
+  if (dotsFound > 1) {
+    return -1; // more than 1 dot means something weird, not number for sure
+  }
+  return dotsFound; // 1 - float/double, 0 - integer
 }
 
 int findCharInArrayRev(char array[], char c, int len) {
@@ -44,8 +51,11 @@ String getValue(char *buffer, int maxlen, char startchar, char endchar) {
   memset(res, 0, sizeof(res));
 
   if (strncpy(res, buffer + s + 1, l)) {
-    if (isNumber(res, l))
-      return String((endchar == VALUE_END_CHAR ? VALUE_NUMERIC_MULTIPLIER : 1) * atof(res));
+    short numType = getValueType(res, l);
+    if (numType == 1) // float or double
+      return String((endchar == VALUE_END_CHAR ? VALUE_NUMERIC_MULTIPLIER : 1) * atof(res), VALUE_FLOAT_DECIMAL_PLACES);
+    else if (numType == 0) // integer
+      return String((endchar == VALUE_END_CHAR ? VALUE_NUMERIC_MULTIPLIER : 1) * atoi(res));
     else
       return String(res);
   }
@@ -139,5 +149,4 @@ bool readP1Serial() {
   }
   return false;
 }
-
 

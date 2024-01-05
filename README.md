@@ -26,7 +26,7 @@ Setting up your Arduino IDE:
 - Write to your device via USB the first time, you can do it OTA all times thereafter.
 
 ### Circuit diagram
-I have used the RX02 pin on the ESP32 to still use the USB port on devkit for debugging your ESP32. You could use any other pin however if you use standard RX and try debugging using USB, conflicts will happen. 
+I have used the RX02 pin on the ESP32 to still use the USB port on devkit for debugging your ESP32. You could use any other pin however if you use standard RX and try debugging using USB, conflicts will happen.
 Connect the ESP32 to an RJ12 cable/connector following the diagram.
 
 | P1 pin   | ESP32 Pin |
@@ -148,6 +148,10 @@ p1_meter/sensor/magnitude_of_last_voltage_swell_in_phase_l3
 All the metrics you need are easily added in `DSMR_MAP` variable in `dsmr_map.h` file. With the DEBUG mode it's possible to see all the topics you add/create in the serial monitor. Also, it's possible to configure topic structure by changing `MQTT_ROOT_TOPIC` value in `settings.h` file.
 There is additional TEST mode to try your setup with test telegram and actual MQTT message send while your adapter is not connected to P1 port. 
 EMAIL_DEBUGGING is used to send debug messages to any email, e.g. GMail address. This is might be usefull to trace what's going on when device is connected to P1 port and actual debugging using USB port is impossible.
+
 ### Home Assistant Configuration
 
-Use this [example](https://raw.githubusercontent.com/daniel-jong/esp8266_p1meter/master/assets/p1_sensors.yaml) for home assistant's `sensor.yaml`
+Use this [example](assets/mqtt.yaml) for home assistant's `mqtt.yaml` which must be included in main `configuration.yaml` as follows:
+```yaml
+mqtt: !include mqtt.yaml
+```
