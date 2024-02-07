@@ -21,9 +21,11 @@ void blinkLed(int numberOfBlinks, int msBetweenBlinks) {
 
 void makeSureWiFiConnected(bool setupMode) {
   if (setupMode) {
+#ifdef TURN_OFF_WIFI_PS
     //turn WiFi power saving mode off
     esp_wifi_set_ps(WIFI_PS_NONE);
-    
+#endif    
+
     WiFi.mode(WIFI_STA);
     WiFi.begin(WIFI_SSID, WIFI_PASS);
 

@@ -41,6 +41,9 @@
 #define MQTT_DEBUG_TOPIC "p1_meter/debug"
 #endif
 
+// Comment out below define if you think WiFi connection is stable with any other power saving settings
+#define TURN_OFF_WIFI_PS
+
 #define WIFI_MAX_RECONNECT_TRIES 5
 
 char WIFI_SSID[32] = "MyWifi";
