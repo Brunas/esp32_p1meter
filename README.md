@@ -25,7 +25,7 @@ Setting up your Arduino IDE:
 - Using the Tools->Manage Libraries... install `PubSubClient`, `ArduinoJson` and `tiny-collections`. For email debugging install `EmailSender` library.
 - I have tested this on the 240 MHz and 160 MHz CPU frequency mode, pick either one. It has worked but not for long 😁. I've added `CPU_FREQ` constant to set CPU frequency to as low value as your board supports to assign more power from P1 port to the most important WiFi connection. In my case it's 80 MHz. It has been working well since the change due to no heavy calculations in the code.
 - I have also added `TURNE_OFF_WIFI_PS` define disabled WiFi power saving by executing `esp_wifi_set_ps(WIFI_PS_NONE)`. Comment it out if you think WiFi connection will be stable.
-- In the file `settings.h` change all values accordingly
+- Copy file `template.settings.h` to `settings.h` and change values accordingly in it.
 - Write to your device via USB the first time, you can do it OTA all times thereafter.
 
 ### Circuit diagram
