@@ -40,37 +40,41 @@
 #ifdef MQTT_DEBUGGING
 #define MQTT_DEBUG_TOPIC "p1_meter/debug"
 #endif
+// Uncomment to restart ESP on MQTT errors. 
+// Be mindfull because this can make device unreachable if settings are wrong - restarting might cause infinite loop
+// Uncomment only when MQTT settings are correct and server is reachable.
+//#define MQTT_RESTART_ON_ERROR
 
 // Comment out below define if you think WiFi connection is stable with any other power saving settings
 #define TURN_OFF_WIFI_PS
 
 #define WIFI_MAX_RECONNECT_TRIES 5
 
-char WIFI_SSID[32] = "MyWifi";
-char WIFI_PASS[32] = "MyWifiPassword";
+const char WIFI_SSID[32] = "MyWifi";
+const char WIFI_PASS[32] = "MyWifiPassword";
 
-char MQTT_HOST[64] = "homeassistant.local";
-char MQTT_PORT[6] = "1883";
-char MQTT_USER[32] = "mqtt";
-char MQTT_PASS[32] = "mqttpass";
+const char MQTT_HOST[64] = "homeassistant.local";
+const char MQTT_PORT[6] = "1883";
+const char MQTT_USER[32] = "mqtt";
+const char MQTT_PASS[32] = "mqttpass";
 
 #ifdef EMAIL_DEBUGGING
-char EMAIL_ADDRESS[32] = "name.surname@gmail.com";
-char EMAIL_PASSWORD[32] = "mygmailappkey";
+const char EMAIL_ADDRESS[32] = "name.surname@gmail.com";
+const char EMAIL_PASSWORD[32] = "mygmailappkey";
 String emailMessageDump;
 #endif
 
 // if your P1 values with units need to be multiplied by any multiplier, specify it here
-long VALUE_NUMERIC_MULTIPLIER = 1;
+const long VALUE_NUMERIC_MULTIPLIER = 1;
 
 // Decimal places for float values, by default it's 2
 // Integers are handled automatically and no decimals are used
-unsigned short VALUE_FLOAT_DECIMAL_PLACES = 3;
+const unsigned short VALUE_FLOAT_DECIMAL_PLACES = 3;
 
 // Specify CPU frequenxy in MHz to reduce power usage
 // 0, if frequency should be handled automatically using ArduinoIDE and board settings
 // CAUTION: please make sure your CPU can handle frequency!
-unsigned int CPU_FREQ = 80;
+const unsigned int CPU_FREQ = 80;
 
 // Nothing to change below - globals to make it all work as simple as possible
 char telegram[P1_MAXLINELENGTH];
