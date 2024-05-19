@@ -3,6 +3,8 @@
 //#define DEBUG
 // Uncomment for debug messages sent to mqtt
 //#define MQTT_DEBUGGING
+// Uncomment for debug messages sent to port 80
+//#define WEB_DEBUGGING
 // Uncomment for testing
 //#define TEST
 
@@ -86,7 +88,7 @@ struct TelegramDecodedObject
 {
   String name;
   String value;
-  char code[16];
+    char code[16];
   bool sendData = true;
 };
 
