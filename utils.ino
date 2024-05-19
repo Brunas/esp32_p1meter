@@ -39,8 +39,8 @@ void makeSureWiFiConnected(bool setupMode) {
     int _retries = WIFI_MAX_RECONNECT_TRIES;
     while (WiFi.waitForConnectResult() != WL_CONNECTED && _retries > 0) {
 #ifdef DEBUG
-      Serial.print("WiFi Connection Failed! Retries left: ");
-      Serial.println(_retries);
+      Log.print("WiFi Connection Failed! Retries left: ");
+      Log.println(_retries);
 #endif
       _retries--;
       delay(3000);
@@ -48,7 +48,7 @@ void makeSureWiFiConnected(bool setupMode) {
     if (WiFi.status() != WL_CONNECTED) {
       blinkLed(10, 50);  // Blink fast to indicate failed WiFi connection
 #ifdef DEBUG
-      Serial.println("Connection Failed! Rebooting...");
+      Log.println("Connection Failed! Rebooting...");
 #endif
       ESP.restart();
     }
@@ -58,41 +58,11 @@ void makeSureWiFiConnected(bool setupMode) {
   }
 }
 
-void sendEmailMessage(String subject, String message) {
-#ifdef EMAIL_DEBUGGING
-  EMailSender::EMailMessage _eMailMessage;
-  _eMailMessage.subject = subject;
-  _eMailMessage.message = message;
-
-  EMailSender::Response _resp = emailSend.send(EMAIL_ADDRESS, _eMailMessage);
-  if (!_resp.status) {
-    Serial.println("Sending status: ");
-    Serial.println(_resp.status);
-    Serial.println(_resp.code);
-    Serial.println(_resp.desc);
-  }
-#endif
-  ;
-}
-
 void debug(String msg) {
 #ifdef DEBUG
   unsigned int _temp = (temprature_sens_read() - 32) / 1.8;
   msg += " (T: " + String(_temp) + "C)";
-  Serial.println(msg);
-
-  #ifdef MQTT_DEBUGGING;
-    sendMQTTMessage(MQTT_DEBUG_TOPIC, msg.c_str());
-  #endif
-
-  #ifdef EMAIL_DEBUGGING
-    emailMessageDump += msg + "\r\n";
-
-    if (emailMessageDump.length() > 5000) {
-      sendEmailMessage(String(HOSTNAME) + " message", emailMessageDump);
-      emailMessageDump = "";
-    }
-  #endif
+  Log.println(msg);
 #endif
   ;
 }

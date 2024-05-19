@@ -6,8 +6,8 @@ This fork is based on work from [bartwo](https://github.com/bartwo/esp32_p1meter
 
 How is this fork different from base:
 - Make MQTT sensors configured using JSON map with all available data and get MQTT sensors created dynamically.
-- Add email sending for debugging purposes.
 - Added support for string readings not just numbers.
+- Added logging.
 - Even more refactored code for readability.
 
 ![P1 plugged into meter with external antenna](assets/3.jpg)
@@ -22,9 +22,9 @@ This setup requires:
 
 Setting up your Arduino IDE:
 - Ensure you have selected the right board (you might need to install your esp32board in the Arduino IDE).
-- Using the Tools->Manage Libraries... install `PubSubClient`, `ArduinoJson` and `tiny-collections`. For email debugging install `EmailSender` library.
+- Using the Tools->Manage Libraries... install `PubSubClient`, `ArduinoJson`, `tiny-collections` and `TLog`.
 - I have tested this on the 240 MHz and 160 MHz CPU frequency mode, pick either one. It has worked but not for long 😁. I've added `CPU_FREQ` constant to set CPU frequency to as low value as your board supports to assign more power from P1 port to the most important WiFi connection. In my case it's 80 MHz. It has been working well since the change due to no heavy calculations in the code.
-- I have also added `TURNE_OFF_WIFI_PS` define disabled WiFi power saving by executing `esp_wifi_set_ps(WIFI_PS_NONE)`. Comment it out if you think WiFi connection will be stable.
+- I have also added `TURN_OFF_WIFI_PS` define disabled WiFi power saving by executing `esp_wifi_set_ps(WIFI_PS_NONE)`. Comment it out if you think WiFi connection will be stable.
 - Copy file `template.settings.h` to `settings.h` and change values accordingly in it.
 - Write to your device via USB the first time, you can do it OTA all times thereafter.
 
@@ -72,36 +72,17 @@ All metrics are send to their own MQTT topic. The software outputs all the topic
 Example:
 
 ```
-p1_meter/sensor/active_energy_import
 p1_meter/sensor/clock
-p1_meter/sensor/reactive_energy_import
-p1_meter/sensor/reactive_energy_export
+p1_meter/sensor/active_energy_import
 p1_meter/sensor/active_energy_import_rate_1
 p1_meter/sensor/active_energy_import_rate_2
-p1_meter/sensor/active_energy_export_rate_1
-p1_meter/sensor/active_energy_export_rate_2
-p1_meter/sensor/reactive_energy_rate_1
-p1_meter/sensor/reactive_energy_rate_2
-p1_meter/sensor/reactive_energy_minusr_rate_1
-p1_meter/sensor/reactive_energy_minusr_rate_2
-p1_meter/sensor/instantaneous_voltage_l1
-p1_meter/sensor/average_voltage_l1
-p1_meter/sensor/instantaneous_current_l1
-p1_meter/sensor/sliding_average_current_l1
-p1_meter/sensor/instantaneous_voltage_l2
-p1_meter/sensor/average_voltage_l2
-p1_meter/sensor/instantaneous_current_l2
-p1_meter/sensor/sliding_average_current_l2
-p1_meter/sensor/instantaneous_voltage_l3
-p1_meter/sensor/average_voltage_l3
-p1_meter/sensor/instantaneous_current_l3
-p1_meter/sensor/sliding_average_current_l3
-p1_meter/sensor/instantaneous_voltage
-p1_meter/sensor/instantaneous_current
-p1_meter/sensor/instantaneous_current_in_neutral
-p1_meter/sensor/instantaneous_current_sum_over_all_phases
-p1_meter/sensor/instantaneous_net_frequency_any_phase
-p1_meter/sensor/instantaneous_active_power
+p1_meter/sensor/active_energy_export
+p1_meter/sensor/reactive_energy_import
+p1_meter/sensor/reactive_energy_export
+p1_meter/sensor/instantaneous_active_import_power
+p1_meter/sensor/instantaneous_active_export_power
+p1_meter/sensor/instantaneous_reactive_import_power
+p1_meter/sensor/instantaneous_reactive_export_power
 p1_meter/sensor/instantaneous_active_import_power_in_phase_l1
 p1_meter/sensor/instantaneous_active_import_power_in_phase_l2
 p1_meter/sensor/instantaneous_active_import_power_in_phase_l3
@@ -114,52 +95,31 @@ p1_meter/sensor/instantaneous_reactive_import_power_in_phase_l3
 p1_meter/sensor/instantaneous_reactive_export_power_in_phase_l1
 p1_meter/sensor/instantaneous_reactive_export_power_in_phase_l2
 p1_meter/sensor/instantaneous_reactive_export_power_in_phase_l3
-p1_meter/sensor/instantaneous_apparent_import_power
-p1_meter/sensor/instantaneous_apparent_import_power_in_phase_l1
-p1_meter/sensor/instantaneous_apparent_import_power_in_phase_l2
-p1_meter/sensor/instantaneous_apparent_import_power_in_phase_l3
-p1_meter/sensor/instantaneous_apparent_export_power
-p1_meter/sensor/instantaneous_apparent_export_power_in_phase_l1
-p1_meter/sensor/instantaneous_apparent_export_power_in_phase_l2
-p1_meter/sensor/instantaneous_apparent_export_power_in_phase_l3
-p1_meter/sensor/average_import_power
-p1_meter/sensor/average_net_power
-p1_meter/sensor/average_total_power
+p1_meter/sensor/instantaneous_voltage_l1
+p1_meter/sensor/instantaneous_current_l1
+p1_meter/sensor/instantaneous_voltage_l2
+p1_meter/sensor/instantaneous_current_l2
+p1_meter/sensor/instantaneous_voltage_l3
+p1_meter/sensor/instantaneous_current_l3
+p1_meter/sensor/instantaneous_net_frequency_any_phase
 p1_meter/sensor/instantaneous_power_factor
 p1_meter/sensor/instantaneous_power_factor_in_phase_l1
 p1_meter/sensor/instantaneous_power_factor_in_phase_l2
 p1_meter/sensor/instantaneous_power_factor_in_phase_l3
-p1_meter/sensor/minimum_power_factor
-p1_meter/sensor/demand_register_1_active_energy_import
-p1_meter/sensor/demand_register_2_active_energy_export
-p1_meter/sensor/demand_register_3_reactive_energy_import
-p1_meter/sensor/demand_register_4_reactive_energy_export
-p1_meter/sensor/demand_register_5_apparent_energy_import
-p1_meter/sensor/demand_register_6_apparent_energy_export
-p1_meter/sensor/last_average_demand_register_1_active_energy_import
-p1_meter/sensor/last_average_demand_register_2_active_energy_export
-p1_meter/sensor/last_average_demand_register_3_reactive_energy_import
-p1_meter/sensor/last_average_demand_register_4_reactive_energy_export
-p1_meter/sensor/last_average_demand_register_5_apparent_energy_import
-p1_meter/sensor/last_average_demand_register_6_apparent_energy_export
 p1_meter/sensor/number_of_power_failures_in_any_phase
-p1_meter/sensor/duration_of_last_voltage_sag_in_phase_l1
-p1_meter/sensor/duration_of_last_voltage_sag_in_phase_l2
-p1_meter/sensor/duration_of_last_voltage_sag_in_phase_l3
-p1_meter/sensor/magnitude_of_last_voltage_sag_in_phase_l1
-p1_meter/sensor/magnitude_of_last_voltage_sag_in_phase_l2
-p1_meter/sensor/magnitude_of_last_voltage_sag_in_phase_l3
-p1_meter/sensor/duration_of_last_voltage_swell_in_phase_l1
-p1_meter/sensor/duration_of_last_voltage_swell_in_phase_l2
-p1_meter/sensor/duration_of_last_voltage_swell_in_phase_l3
-p1_meter/sensor/magnitude_of_last_voltage_swell_in_phase_l1
-p1_meter/sensor/magnitude_of_last_voltage_swell_in_phase_l2
-p1_meter/sensor/magnitude_of_last_voltage_swell_in_phase_l3
+p1_meter/sensor/consumer_message_text
+p1_meter/sensor/number_of_voltage_sags_in_phase_l1
+p1_meter/sensor/number_of_voltage_sags_in_phase_l2
+p1_meter/sensor/number_of_voltage_sags_in_phase_l3
+p1_meter/sensor/number_of_voltage_swells_in_phase_l1
+p1_meter/sensor/number_of_voltage_swells_in_phase_l2
+p1_meter/sensor/number_of_voltage_swells_in_phase_l3
+p1_meter/sensor/equipment_identifier
 ```
 
 All the metrics you need are easily added in `DSMR_MAP` variable in `dsmr_map.h` file. With the `DEBUG` mode it's possible to see all the topics you add/create in the serial monitor. Also, it's possible to configure topic structure by changing `MQTT_ROOT_TOPIC` value in `settings.h` file.
 There is additional `TEST` mode to try your setup with test telegram and actual MQTT message send while your adapter is not connected to P1 port. 
-`EMAIL_DEBUGGING` is used to send debug messages to any email, e.g. GMail address. This is might be usefull to trace what's going on when device is connected to P1 port and actual debugging using USB port is impossible.
+`WEB_DEBUGGING` is used to access debug messages on the web site accessed using port 80. This is might be usefull to trace what's going on when device is connected to P1 port and actual debugging using USB port is impossible.
 Additionally, I've implemented `MQTT_DEBUGGING` mode to allow sending debug messages to MQTT topic defined by `MQTT_DEBUG_TOPIC`.
 
 ### Home Assistant Configuration

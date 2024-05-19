@@ -32,7 +32,7 @@ void makeSureMqttConnected() {
 void sendMetric(String name, String metric) {
   String topic = String(MQTT_ROOT_TOPIC) + "/" + name;
 #ifdef DEBUG
-  Serial.println(topic);
+  Log.println(topic);
 #endif
   sendMQTTMessage(topic.c_str(), metric.c_str());
 }
