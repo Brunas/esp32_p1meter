@@ -12,11 +12,6 @@
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
 
-#ifdef EMAIL_DEBUGGING
-#include <EMailSender.h>
-EMailSender emailSend(EMAIL_ADDRESS, EMAIL_PASSWORD);
-#endif
-
 /***********************************
             Main Setup
  ***********************************/
