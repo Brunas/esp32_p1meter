@@ -21,15 +21,18 @@ void makeSureMqttConnected() {
 
   if (!mqttClient.connected()) {
     blinkLed(20, 200); // Blink moderately fast to indicate failed connection
-    debug ("Connection to MQTT Failed! Rebooting...");
+    debug ("Connection to MQTT Failed!");
+#ifdef MQTT_RESTART_ON_ERROR
+    debug ("Rebooting...");
     ESP.restart();
+#endif
   }
 }
 
 void sendMetric(String name, String metric) {
   String topic = String(MQTT_ROOT_TOPIC) + "/" + name;
 #ifdef DEBUG
-  Serial.println(topic);
+  debug(topic);
 #endif
   sendMQTTMessage(topic.c_str(), metric.c_str());
 }

@@ -12,11 +12,6 @@
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
 
-#ifdef EMAIL_DEBUGGING
-#include <EMailSender.h>
-EMailSender emailSend(EMAIL_ADDRESS, EMAIL_PASSWORD);
-#endif
-
 /***********************************
             Main Setup
  ***********************************/
@@ -44,11 +39,12 @@ void setup() {
   MDNS.begin(String(HOSTNAME).c_str());
   delay(1000);
 
-  setupDataReadout();
   setupOTA();
 
   mqttClient.setServer(MQTT_HOST, atoi(MQTT_PORT));
   makeSureMqttConnected();
+
+  setupDataReadout();
 
 #ifndef TEST
   Serial2.begin(BAUD_RATE, SERIAL_8N1, RXD2, TXD2, true);

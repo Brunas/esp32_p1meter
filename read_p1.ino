@@ -15,6 +15,9 @@ unsigned int crc16(unsigned int crc, unsigned char *buf, int len) {
 }
 
 short getValueType(char *res, int len) {
+  if (len > 10) {
+    return -1; // treat longer than possible max int 2147483647 as strings
+  } 
   short dotsFound = 0;
   for (int i = 0; i < len; i++) {
     if (((res[i] < '0') || (res[i] > '9')) && (res[i] != '.' && res[i] != 0)) {
@@ -47,7 +50,7 @@ String getValue(char *buffer, int maxlen, char startchar, char endchar) {
   if (l < 0) // end char not found
     return String(NA);
 
-  char res[16];
+  char res[128];
   memset(res, 0, sizeof(res));
 
   if (strncpy(res, buffer + s + 1, l)) {
@@ -98,7 +101,7 @@ bool decodeTelegram(int len) {
   }
 
   // Loops throug all the telegramObjects to find the code in the telegram line
-  // If it finds the code the value will be stored in the object so it can later be send to the mqtt broker
+  // If it finds the code the value will be stored in the object so it can later be sent to the mqtt broker
   for (int i = 0; i < telegramObjects.size(); i++) {
     if (strncmp(telegram, telegramObjects[i].code, strlen(telegramObjects[i].code)) == 0) {
       String newValue = getValue(telegram, len, VALUE_START_CHAR, VALUE_END_CHAR);

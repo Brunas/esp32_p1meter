@@ -26,7 +26,7 @@ void setupDataReadout() {
 #ifdef DEBUG
   debug("MQTT Topics initialized (" + String(_count) + "):");
   for (int i = 0; i < _count; i++) {
-    debug(String(MQTT_ROOT_TOPIC) + "/" + telegramObjects[i].name);
+    debug(String(MQTT_ROOT_TOPIC) + "/" + telegramObjects[i].name + ". OBIS: " + String(telegramObjects[i].code));
   }
 #endif
 }

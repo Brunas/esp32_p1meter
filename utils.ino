@@ -58,23 +58,6 @@ void makeSureWiFiConnected(bool setupMode) {
   }
 }
 
-void sendEmailMessage(String subject, String message) {
-#ifdef EMAIL_DEBUGGING
-  EMailSender::EMailMessage _eMailMessage;
-  _eMailMessage.subject = subject;
-  _eMailMessage.message = message;
-
-  EMailSender::Response _resp = emailSend.send(EMAIL_ADDRESS, _eMailMessage);
-  if (!_resp.status) {
-    Serial.println("Sending status: ");
-    Serial.println(_resp.status);
-    Serial.println(_resp.code);
-    Serial.println(_resp.desc);
-  }
-#endif
-  ;
-}
-
 void debug(String msg) {
 #ifdef DEBUG
   unsigned int _temp = (temprature_sens_read() - 32) / 1.8;
@@ -83,15 +66,6 @@ void debug(String msg) {
 
   #ifdef MQTT_DEBUGGING;
     sendMQTTMessage(MQTT_DEBUG_TOPIC, msg.c_str());
-  #endif
-
-  #ifdef EMAIL_DEBUGGING
-    emailMessageDump += msg + "\r\n";
-
-    if (emailMessageDump.length() > 5000) {
-      sendEmailMessage(String(HOSTNAME) + " message", emailMessageDump);
-      emailMessageDump = "";
-    }
   #endif
 #endif
   ;
