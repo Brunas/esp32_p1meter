@@ -22,7 +22,7 @@ This setup requires:
 
 Setting up your Arduino IDE:
 - Ensure you have selected the right board (you might need to install your esp32board in the Arduino IDE).
-- Using the Tools->Manage Libraries... install `PubSubClient`, `ArduinoJson`, `tiny-collections` and `TLog`.
+- Using the Tools->Manage Libraries... install `PubSubClient`, `ArduinoJson`, and `tiny-collections`.
 - I have tested this on the 240 MHz and 160 MHz CPU frequency mode, pick either one. It has worked but not for long 😁. I've added `CPU_FREQ` constant to set CPU frequency to as low value as your board supports to assign more power from P1 port to the most important WiFi connection. In my case it's 80 MHz. It has been working well since the change due to no heavy calculations in the code.
 - I have also added `TURN_OFF_WIFI_PS` define disabled WiFi power saving by executing `esp_wifi_set_ps(WIFI_PS_NONE)`. Comment it out if you think WiFi connection will be stable.
 - Copy file `template.settings.h` to `settings.h` and change values accordingly in it.
@@ -118,8 +118,7 @@ p1_meter/sensor/equipment_identifier
 ```
 
 All the metrics you need are easily added in `DSMR_MAP` variable in `dsmr_map.h` file. With the `DEBUG` mode it's possible to see all the topics you add/create in the serial monitor. Also, it's possible to configure topic structure by changing `MQTT_ROOT_TOPIC` value in `settings.h` file.
-There is additional `TEST` mode to try your setup with test telegram and actual MQTT message send while your adapter is not connected to P1 port. 
-`WEB_DEBUGGING` is used to access debug messages on the web site accessed using port 80. This is might be usefull to trace what's going on when device is connected to P1 port and actual debugging using USB port is impossible.
+There is additional `TEST` mode to try your setup with test telegram and actual MQTT message send while your adapter is not connected to P1 port.
 Additionally, I've implemented `MQTT_DEBUGGING` mode to allow sending debug messages to MQTT topic defined by `MQTT_DEBUG_TOPIC`.
 
 ### Home Assistant Configuration
