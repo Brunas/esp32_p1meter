@@ -3,8 +3,6 @@
 //#define DEBUG
 // Uncomment for debug messages sent to mqtt
 //#define MQTT_DEBUGGING
-// Uncomment for debug messages sent to port 80
-//#define WEB_DEBUGGING
 // Uncomment for testing
 //#define TEST
 
@@ -76,7 +74,7 @@
 #define VALUE_NO_UNITS_END_CHAR ')'
 #define NA "N/A"
 
-#define P1_MAXLINELENGTH 1050
+#define P1_MAXLINELENGTH 1100
 
 // Nothing to change below - globals to make it all work as simple as possible
 char telegram[P1_MAXLINELENGTH];
@@ -88,15 +86,10 @@ struct TelegramDecodedObject
 {
   String name;
   String value;
-    char code[16];
+  char code[16];
   bool sendData = true;
 };
 
 tc::vector<struct TelegramDecodedObject> telegramObjects;
 
 unsigned int currentCRC = 0;
-
-#ifdef EMAIL_DEBUGGING
-String emailMessageDump;
-#endif
-

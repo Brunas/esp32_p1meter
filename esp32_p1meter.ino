@@ -5,7 +5,6 @@
 #include <ESPmDNS.h>
 #include <ArduinoJson.h>
 #include <tiny-collections.h>
-#include <TLog.h>
 
 #include "settings.h"
 #include "dsmr_map.h"
@@ -13,12 +12,6 @@
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
 
-#ifdef MQTT_DEBUGGING
-#include <MqttlogStream.h>
-#endif
-#ifdef WEB_DEBUGGING
-#include <WebSerialStream.h>
-#endif
 /***********************************
             Main Setup
  ***********************************/
@@ -46,26 +39,12 @@ void setup() {
   MDNS.begin(String(HOSTNAME).c_str());
   delay(1000);
 
-  setupDataReadout();
   setupOTA();
 
   mqttClient.setServer(MQTT_HOST, atoi(MQTT_PORT));
   makeSureMqttConnected();
 
-#ifdef MQTT_DEBUGGING
-  MqttStream mqttStream = MqttStream(&mqttClient);
-  mqttStream.setTopic(MQTT_DEBUG_TOPIC);
-
-  const std::shared_ptr<LOGBase> mqttStreamPtr = std::make_shared<MqttStream>(mqttStream);
-  Log.addPrintStream(mqttStreamPtr);
-#endif
-
-#ifdef WEB_DEBUGGING
-  WebSerialStream webSerialStream = WebSerialStream();
-  Log.addPrintStream(std::make_shared<WebSerialStream>(webSerialStream));
-#endif
-
-  Log.begin();
+  setupDataReadout();
 
 #ifndef TEST
   Serial2.begin(BAUD_RATE, SERIAL_8N1, RXD2, TXD2, true);
@@ -81,8 +60,6 @@ void setup() {
  ***********************************/
 void loop() {
   long now = millis();
-
-  Log.loop();
 
   makeSureWiFiConnected(false);
 
@@ -126,26 +103,26 @@ void setupOTA() {
                 type = "filesystem";
 
               // NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
-              Log.println("Start updating " + type);
+              Serial.println("Start updating " + type);
             })
     .onEnd([]() {
-      Log.println("\nEnd");
+      Serial.println("\nEnd");
     })
     .onProgress([](unsigned int progress, unsigned int total) {
-      Log.printf("Progress: %u%%\r", (progress / (total / 100)));
+      Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
     })
     .onError([](ota_error_t error) {
-      Log.printf("Error[%u]: ", error);
+      Serial.printf("Error[%u]: ", error);
       if (error == OTA_AUTH_ERROR)
-        Log.println("Auth Failed");
+        Serial.println("Auth Failed");
       else if (error == OTA_BEGIN_ERROR)
-        Log.println("Begin Failed");
+        Serial.println("Begin Failed");
       else if (error == OTA_CONNECT_ERROR)
-        Log.println("Connect Failed");
+        Serial.println("Connect Failed");
       else if (error == OTA_RECEIVE_ERROR)
-        Log.println("Receive Failed");
+        Serial.println("Receive Failed");
       else if (error == OTA_END_ERROR)
-        Log.println("End Failed");
+        Serial.println("End Failed");
     });
   ArduinoOTA.setHostname(String(HOSTNAME).c_str());
   ArduinoOTA.setPasswordHash(String(OTA_PASSWORD_HASH).c_str());
