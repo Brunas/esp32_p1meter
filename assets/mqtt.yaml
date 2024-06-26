@@ -1,6 +1,9 @@
 # Sensors for esp32_p1meter to be used in Home Assistant
 # In configuration.yaml file add following line to make sensors appear in HA:
 # mqtt: !include mqtt.yaml
+# Sensors for esp32_p1meter to be used in Home Assistant
+# In configuration.yaml file add following line to make sensors appear in HA:
+# mqtt: !include mqtt.yaml
 sensor:
   - name: P1 Meter Clock Raw
     unique_id: p1_meter_clock_raw
@@ -227,11 +230,6 @@ sensor:
     state_topic: "p1_meter/sensor/instantaneous_power_factor_in_phase_l3"
     device_class: "power_factor"
     state_class: "measurement"
-  - name: P1 Meter Minimum Power factor (+A/+VA)
-    unique_id: p1_meter_minimum_power_factor
-    state_topic: "p1_meter/sensor/minimum_power_factor"
-    device_class: "power_factor"
-    state_class: "measurement"
 
   - name: P1 Meter Number of power failures in any phase
     unique_id: p1_meter_number_of_power_failures_in_any_phase
@@ -263,7 +261,10 @@ sensor:
     state_topic: "p1_meter/sensor/number_of_voltage_swells_in_phase_l3"
     state_class: "total_increasing"
 
-
   - name: P1 Meter Consumer Message text
     unique_id: p1_meter_consumer_message_text
     state_topic: "p1_meter/sensor/consumer_message_text"
+
+  - name: P1 Meter Debug
+    unique_id: p1_meter_debug
+    state_topic: "p1_meter/debug"
