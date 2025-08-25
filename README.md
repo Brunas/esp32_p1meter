@@ -117,9 +117,12 @@ p1_meter/sensor/number_of_voltage_swells_in_phase_l3
 p1_meter/sensor/equipment_identifier
 ```
 
-All the metrics you need are easily added in `DSMR_MAP` variable in `dsmr_map.h` file. With the `DEBUG` mode it's possible to see all the topics you add/create in the serial monitor. Also, it's possible to configure topic structure by changing `MQTT_ROOT_TOPIC` value in `settings.h` file.
-There is additional `TEST` mode to try your setup with test telegram and actual MQTT message send while your adapter is not connected to P1 port.
-Additionally, I've implemented `MQTT_DEBUGGING` mode to allow sending debug messages to MQTT topic defined by `MQTT_DEBUG_TOPIC`.
+All the metrics you need are easily added in `DSMR_MAP` variable in `dsmr_map.h` file. Other things to note:
+* `DEBUG` mode allows to see all the topics you add/create in the serial monitor. 
+* It's possible to configure topic structure by changing `MQTT_ROOT_TOPIC` value in `settings.h` file.
+* `TEST` mode to try your setup with test telegram and actual MQTT message send while your adapter is not connected to P1 port.
+* `MQTT_DEBUGGING` mode to allow sending debug messages to MQTT topic defined by `MQTT_DEBUG_TOPIC`.
+* `RESTART_AFTER_BOOT` defines milliseconds when restart is executed after boot, default is 1 hour. This is useful when ESP32 for some reason hangs and only restart helps. If define is commented, no reboot is done.
 
 ### Home Assistant Configuration
 

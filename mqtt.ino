@@ -20,7 +20,7 @@ void makeSureMqttConnected() {
   }
 
   if (!mqttClient.connected()) {
-    blinkLed(20, 200); // Blink moderately fast to indicate failed connection
+    blinkLed(5, 1500); // Blink long to indicate failed connection
     debug ("Connection to MQTT Failed!");
 #ifdef MQTT_RESTART_ON_ERROR
     debug ("Rebooting...");
