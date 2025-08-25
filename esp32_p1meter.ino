@@ -6,11 +6,9 @@
 #include <ArduinoJson.h>
 #include <tiny-collections.h>
 
-#include "settings.h"
 #include "dsmr_map.h"
-
-WiFiClient espClient;
-PubSubClient mqttClient(espClient);
+#include "settings.h"
+#include "globals.h"
 
 /***********************************
             Main Setup
@@ -29,9 +27,9 @@ void setup() {
   Serial.begin(BAUD_RATE);
 
 #ifdef DEBUG
-  // Blinking 2 times long to indicate DEBUG mode
+  // Blinking 1 more time short to indicate DEBUG mode
   debug("Booting - DEBUG mode on");
-  blinkLed(2, 2000);
+  blinkLed(1, 500);
 #endif
 
   makeSureWiFiConnected(true);
@@ -52,7 +50,7 @@ void setup() {
 
   debug("System initialised successfully!");
 
-  blinkLed(5, 500);  // Blink 5 times to indicate end of setup
+  blinkLed(3, 500);  // Blink 3 times short to indicate end of setup
 }
 
 /***********************************
@@ -60,6 +58,14 @@ void setup() {
  ***********************************/
 void loop() {
   long now = millis();
+
+#ifdef RESTART_AFTER_BOOT
+  if (now >= RESTART_AFTER_BOOT) {
+    debug("Restarting device after " + String(RESTART_AFTER_BOOT / 60000) + " minutes...");
+    delay(1000);
+    ESP.restart();
+  }
+#endif
 
   makeSureWiFiConnected(false);
 

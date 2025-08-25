@@ -46,7 +46,7 @@ void makeSureWiFiConnected(bool setupMode) {
       delay(3000);
     }
     if (WiFi.status() != WL_CONNECTED) {
-      blinkLed(10, 50);  // Blink fast to indicate failed WiFi connection
+      blinkLed(3, 1500);  // Blink slow to indicate failed WiFi connection
 #ifdef DEBUG
       Serial.println("Connection Failed! Rebooting...");
 #endif

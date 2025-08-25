@@ -43,6 +43,10 @@
 #define MQTT_DEBUG_TOPIC "p1_meter/debug"
 #endif
 
+// Restart after boot-up in milliseconds
+// In case your ESP strangely hangs and only reboot can help
+#define RESTART_AFTER_BOOT 3600000 // 1 Hour
+
 // Schedule of reading telegrams
 // Update treshold in milliseconds, messages will only be sent on this interval
 //#define UPDATE_INTERVAL 1000 // 1 second
@@ -75,21 +79,3 @@
 #define NA "N/A"
 
 #define P1_MAXLINELENGTH 1100
-
-// Nothing to change below - globals to make it all work as simple as possible
-char telegram[P1_MAXLINELENGTH];
-
-long LAST_UPDATE_SENT = 0;
-long LAST_FULL_UPDATE_SENT = 0;
-
-struct TelegramDecodedObject
-{
-  String name;
-  String value;
-  char code[16];
-  bool sendData = true;
-};
-
-tc::vector<struct TelegramDecodedObject> telegramObjects;
-
-unsigned int currentCRC = 0;
